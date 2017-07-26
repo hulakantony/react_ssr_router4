@@ -7,6 +7,9 @@ class Users extends Component {
   static fetchData(store) {
     return store.dispatch(fetchUsers());
   }
+  // componentDidMount () {
+  //   this.props.fetchUsers();
+  // }
   render () {
     const  { users } = this.props;
     return (

@@ -12,8 +12,6 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import StaticRouter from 'react-router-dom/StaticRouter';
-import configureStore from '../common/store/configureStore'
-import App from '../common/containers/App'
 import { fetchCounter } from '../common/api/counter'
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { createStore, applyMiddleware } from 'redux'
@@ -55,9 +53,9 @@ const handleRender = (req, res) => {
   const branch = matchRoutes(routes, req.url);
   const promises = branch.map(({route}) => {
    let fetchData = route.component.fetchData;
-   return fetchData instanceof Function ? fetchData(store) : Promise.resolve(null)
+   return (fetchData instanceof Function) ? fetchData(store) : Promise.resolve(null)
   });
-  return Promise.all(promises).then((data) => {
+  return Promise.all(promises).then(() => {
    let context = {};
    const content = renderToString(
      <Provider store={store}>

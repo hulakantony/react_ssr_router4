@@ -14,7 +14,7 @@ const routes = [
       },
       {
         path: '/counter',
-        component: Counter
+        component: Counter,
       },
       {
         path: '/users',
