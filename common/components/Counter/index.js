@@ -3,11 +3,17 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as CounterActions from '../../actions/counter'
+import {Helmet} from "react-helmet";
+
 class Counter extends Component {
   render () {
     const  {increment, incrementIfOdd, incrementAsync, decrement, counter } = this.props;
     return (
       <p>
+        <Helmet >
+          <meta charSet="utf-8" />
+          <title>My Title</title>
+        </Helmet>
         Clicked: {counter} times
         {' '}
         <button onClick={increment}>+</button>

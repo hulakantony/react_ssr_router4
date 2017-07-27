@@ -18,6 +18,8 @@ import { createStore, applyMiddleware } from 'redux';
 import compression from 'compression';
 import thunk from 'redux-thunk';
 import rootReducer from '../common/reducers';
+import Helmet from "react-helmet";
+
 
 import routes from '../common/routes';
 
@@ -33,11 +35,13 @@ app.use(compression());
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const renderFullPage = (html, preloadedState) => {
+  let helmet = Helmet.rewind();
   return `
     <!doctype html>
     <html>
       <head>
-        <title>Redux Universal Example</title>
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
       </head>
       <body>
         <div id="app">${html}</div>
@@ -70,6 +74,7 @@ app.get('*', (req, res) => {
             </StaticRouter>
           </Provider>
         );
+
         res.send(renderFullPage(content, store.getState()))
       })
       .catch(err => {
