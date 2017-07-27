@@ -1,12 +1,13 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
+import logger from 'redux-logger'
 import rootReducer from '../reducers'
 
 const configureStore = (preload) => {
   const store = createStore(
     rootReducer,
     preload,
-    applyMiddleware(thunk)
+    applyMiddleware(thunk, logger)
   )
 
   if (module.hot) {

@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
+import { fetchUsers } from '../../actions/users';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import { fetchUsers } from '../../actions/users';
 
 class Users extends Component {
-  static fetchData(store) {
-    return store.dispatch(fetchUsers());
+  componentDidMount() {
+    this.props.fetchUsers();
   }
-  // componentDidMount () {
-  //   this.props.fetchUsers();
-  // }
   render () {
     const  { users } = this.props;
     return (
@@ -17,7 +14,7 @@ class Users extends Component {
         { users.map((user, index) => {
           return (
             <li key={index}>
-              { user.name }
+              USER: { user.name }
             </li>
           )
         }) }

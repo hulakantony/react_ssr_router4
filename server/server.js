@@ -11,7 +11,7 @@ import webpackConfig from '../webpack.config'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
-import StaticRouter from 'react-router-dom/StaticRouter';
+import { StaticRouter, matchPath } from 'react-router-dom';
 import { fetchCounter } from '../common/api/counter'
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { createStore, applyMiddleware } from 'redux'
@@ -47,28 +47,36 @@ const renderFullPage = (html, preloadedState) => {
     </html>
     `
 }
+app.get('*', (req, res) => {
+  const loadBranchData = () => {
+    const branch = matchRoutes(routes, req.url);
+     const promises = branch.map(({route}) => {
+      let fetchData = route.fetchData;
+      return (fetchData instanceof Function) ? fetchData(store.dispatch) : Promise.resolve(null)
+     });
 
-const handleRender = (req, res) => {
-  // Query our mock API asynchronously
-  const branch = matchRoutes(routes, req.url);
-  const promises = branch.map(({route}) => {
-   let fetchData = route.component.fetchData;
-   return (fetchData instanceof Function) ? fetchData(store) : Promise.resolve(null)
-  });
-  return Promise.all(promises).then(() => {
-   let context = {};
-   const content = renderToString(
-     <Provider store={store}>
-       <StaticRouter location={req.url} context={context}>
-         {renderRoutes(routes)}
-       </StaticRouter>
-     </Provider>
-   );
-   res.send(renderFullPage(content, store.getState()))
-  });
-}
+     return Promise.all(promises);
+   };
+    // Query our mock API asynchronously
+    loadBranchData()
+      .then(() => {
+        let context = {};
+        const content = renderToString(
+          <Provider store={store}>
+            <StaticRouter location={req.url} context={context}>
+              {renderRoutes(routes)}
+            </StaticRouter>
+          </Provider>
+        );
+        res.send(renderFullPage(content, store.getState()))
+      })
+      .catch(err => {
+        console.log(err);
+      })
+});
 
-app.use(handleRender)
+
+// app.use(handleRender)
 
 
 app.listen(port, (error) => {

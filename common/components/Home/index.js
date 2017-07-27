@@ -3,7 +3,7 @@ import './style.scss';
 
 const Home = () => (
   <h1>
-    HELLO EPTA
+    HOME
   </h1>
 )
 
