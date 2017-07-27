@@ -7,14 +7,15 @@ import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import webpackConfig from '../webpack.config'
-
+import favicon from 'serve-favicon';
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { StaticRouter, matchPath } from 'react-router-dom';
 import { fetchCounter } from '../common/api/counter'
 import { matchRoutes, renderRoutes } from 'react-router-config';
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware } from 'redux';
+import compression from 'compression';
 import thunk from 'redux-thunk';
 import rootReducer from '../common/reducers';
 
@@ -27,7 +28,8 @@ const port = 3000
 const compiler = webpack(webpackConfig)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: webpackConfig.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
-
+app.use(favicon(path.join(process.cwd(), './favicon.ico')));
+app.use(compression());
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const renderFullPage = (html, preloadedState) => {
@@ -48,6 +50,7 @@ const renderFullPage = (html, preloadedState) => {
     `
 }
 app.get('*', (req, res) => {
+  console.log(req.url);
   const loadBranchData = () => {
     const branch = matchRoutes(routes, req.url);
      const promises = branch.map(({route}) => {
@@ -57,7 +60,6 @@ app.get('*', (req, res) => {
 
      return Promise.all(promises);
    };
-    // Query our mock API asynchronously
     loadBranchData()
       .then(() => {
         let context = {};

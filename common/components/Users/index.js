@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { fetchUsers } from '../../actions/users';
+import { fetchUsersIfNeeded } from '../../actions/users';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 
 class Users extends Component {
   componentDidMount() {
-    this.props.fetchUsers();
+    this.props.fetchUsersIfNeeded();
   }
   render () {
     const  { users } = this.props;
@@ -23,11 +23,11 @@ class Users extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  users: state.users
+  users: state.users.list
 })
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({fetchUsers}, dispatch)
+  return bindActionCreators({fetchUsersIfNeeded}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)
