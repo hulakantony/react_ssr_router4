@@ -42,6 +42,10 @@ const renderFullPage = (html, preloadedState) => {
       <head>
         ${helmet.title.toString()}
         ${helmet.meta.toString()}
+        <meta charSet='utf-8'/>
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="referrer" content="unsafe-url"/>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
       </head>
       <body>
         <div id="app">${html}</div>

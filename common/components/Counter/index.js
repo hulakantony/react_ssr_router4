@@ -11,7 +11,6 @@ class Counter extends Component {
     return (
       <p>
         <Helmet >
-          <meta charSet="utf-8" />
           <title>My Title</title>
         </Helmet>
         Clicked: {counter} times
